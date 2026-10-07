@@ -5,10 +5,21 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Validate repository exclusion boundaries
+      - name: Reject private data and archive paths
         shell: bash
         run: |
-          ! git ls-files | grep -Ei '(^|/)(\.env|\.git|node_modules|MIGRATION_BACKUPS|GAMEWEEKS|02_DATA|03_ARCHIVE|04_OUTPUT)(/|$)|\.(sqlite|db|zip|p12|pem)$'
-          ! git grep -nEI '(sk-[A-Za-z0-9]{20,}|Bearer[[:space:]]+[A-Za-z0-9._-]{24,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- . ':!*.md'
+          set -euo pipefail
+          if git ls-files | grep -Ei '(^|/)(\.env($|\.)|\.git/|node_modules/|MIGRATION_BACKUPS/|GAMEWEEKS/|02_DATA/|03_ARCHIVE/|04_OUTPUT/|__pycache__/)|\.(sqlite|db|zip|p12|pfx|pem|key)$'; then
+            echo "::error::Private-data path detected"; exit 1
+          fi
+      - name: Reject common credential patterns
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -nEI '(sk-[A-Za-z0-9_-]{20,}|Bearer[[:space:]]+[A-Za-z0-9._-]{24,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})' -- .; then
+            echo "::error::Possible secret detected"; exit 1
+          fi
