@@ -1,0 +1,6 @@
+{
+  "_note": "Placeholder example only. Never commit real API keys, secrets or session data.",
+  "provider": "configure-locally",
+  "model": "configure-locally",
+  "api_key": "SET_USING_PRIVATE_LOCAL_CONFIGURATION"
+}
