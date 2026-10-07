@@ -1,0 +1,14 @@
+name: Public source safety
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate repository exclusion boundaries
+        shell: bash
+        run: |
+          ! git ls-files | grep -Ei '(^|/)(\.env|\.git|node_modules|MIGRATION_BACKUPS|GAMEWEEKS|02_DATA|03_ARCHIVE|04_OUTPUT)(/|$)|\.(sqlite|db|zip|p12|pem)$'
+          ! git grep -nEI '(sk-[A-Za-z0-9]{20,}|Bearer[[:space:]]+[A-Za-z0-9._-]{24,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- . ':!*.md'
