@@ -20,6 +20,8 @@ PATTERNS = {
 
 problems=[]
 for p in ROOT.rglob("*"):
+    if ".git" in p.relative_to(ROOT).parts:
+        continue  # Git metadata is never part of the committed source tree.
     if p.is_dir():
         continue
     rel=p.relative_to(ROOT)
