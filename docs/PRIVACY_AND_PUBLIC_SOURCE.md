@@ -6,4 +6,4 @@ Excluded categories: OIDC/access/refresh tokens, API keys, cookies, raw environm
 
 No absence-of-secret guarantee can be inferred solely from an automated redaction script. A clean curated source tree should be scanned before every commit, and any historical secret should be rotated.
 
-The original local Windows project remains untouched. Current repository is private while reviewing the curated release. Do not switch visibility to public until complete source and history scans succeed.
+The original local Windows project remains untouched. The public repository contains only the curated implementation subset that passed the repository's public-source safety workflow. Private account state, research history and credentials remain excluded. Publication of the curated source does not imply that the private runtime is safe or appropriate to mirror wholesale.
