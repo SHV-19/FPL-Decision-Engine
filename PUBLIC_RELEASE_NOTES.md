@@ -15,4 +15,4 @@ Private configuration and access/refresh tokens; account/session state; personal
 - **Curated source:** published to `src/automation`, `src/ui` and `scripts`
 - **Automated security scans:** passed in PR #3
 - **External usability:** requires private configuration, authenticated FPL and data-source access; no ready-to-run synthetic demonstration is provided
-- **Branding:** product naming remains subject to final approval
+- **Documentation:** public docs now cover the implemented player-signal stack, candidate-discovery heuristic, decision constraints, human-evidence provenance and bias/calibration research boundaries

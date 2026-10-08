@@ -20,7 +20,24 @@ The project was shaped by failures rather than only feature requests:
 
 ## Human–AI evaluation
 
-The research chain captures evidence, participant belief, model advice, user response, actual Official action and outcome where events can be reconstructed. The distinction between ex-ante decision quality and realized luck is essential. Human behavior after AI advice cannot be treated as an untouched human baseline.
+The research chain captures evidence, participant belief, model advice, user response, actual Official action and outcome where events can be reconstructed.
+
+The distinctive question is not only **“was the recommendation right?”** It is also:
+
+- What did the manager believe before asking the model?
+- How confident were they?
+- Was the evidence statistical, tactical, social, ownership-driven or a hunch?
+- Did the model change the manager's mind?
+- Was the model accepted or overruled?
+- What evidence caused the change?
+- Did the actual Official FPL action match the stated decision?
+- Was the process defensible before the result was known?
+
+The event design also makes confirmation, recency, ownership pressure, loss aversion, differential preference, team sentiment, AI deference and hindsight/outcome effects inspectable as future research hypotheses. These are observations to test, not diagnoses already proven.
+
+The distinction between ex-ante decision quality and realized luck is essential. Human behavior after AI advice cannot be treated as an untouched human baseline.
+
+See [Prediction and Decision Signals](PREDICTION_AND_DECISION_SIGNALS.md) and [Calibration and Outcomes](CALIBRATION_AND_OUTCOMES.md).
 
 ## Honest project status
 

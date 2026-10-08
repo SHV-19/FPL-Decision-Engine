@@ -8,7 +8,7 @@
 
 A local-first decision-support system that combines **authoritative FPL squad state**, live matchday signals, competitive context, AI-assisted reasoning, and **deterministic legality checks**—then records evidence and outcomes for retrospective analysis.
 
-[Architecture](docs/ARCHITECTURE.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Decision method](docs/DECISION_ENGINE.md) · [Technical blueprint](docs/TECHNICAL_BLUEPRINT.md) · [Demo walkthrough](docs/DEMO.md)
+[Architecture](docs/ARCHITECTURE.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Decision method](docs/DECISION_ENGINE.md) · [Prediction & signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Technical blueprint](docs/TECHNICAL_BLUEPRINT.md) · [Demo walkthrough](docs/DEMO.md)
 
 </div>
 
@@ -21,6 +21,18 @@ A local-first decision-support system that combines **authoritative FPL squad st
 > This project asks: **Given the actual squad, free transfers, bank, fixtures, league position, rivals, risk and uncertainty—what decision should the manager make?**
 
 Raw projections are inputs. A useful recommendation also has to respect ownership, the price of making a move, feasible starting XIs, time horizons and what the model actually knows.
+
+### What makes this different
+
+The engine deliberately separates **prediction, discovery, decision value and research**.
+
+- **Prediction evidence:** Official FPL form/EP, xG/xA/xGI, per-90 rates, minutes, availability, price, ICT-style signals and six-fixture runs.
+- **Candidate discovery:** a transparent shortlist heuristic narrows alternatives; it is explicitly **not** called projected points.
+- **Decision value:** the comparison adds the actual 15-player squad, bank, free transfers, selling prices, hit cost, future flexibility, rank/EO/rival context and uncertainty.
+- **Human evidence:** eye test, tactics, hunches, external opinions and screenshots are retained with provenance rather than being silently converted into facts.
+- **Bias research:** the system records pre-model belief, confidence, model advice, whether the manager changed their mind, the final Official action and the outcome so confirmation, recency, ownership pressure, loss aversion, AI deference and hindsight effects can be studied rather than hidden.
+
+See [Prediction and Decision Signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) for the exact signal stack and research design.
 
 ### What the system supports
 
@@ -104,7 +116,8 @@ The curated implementation is available in [`src/automation`](src/automation), [
 | [Product Case Study](docs/PRODUCT_CASE_STUDY.md) | Problem definition, real failure modes, tradeoffs and iteration |
 | [Architecture](docs/ARCHITECTURE.md) | Data authority, decision flow and source contracts |
 | [Technical Blueprint](docs/TECHNICAL_BLUEPRINT.md) | Runtime, components, storage and system boundaries |
-| [Decision Engine](docs/DECISION_ENGINE.md) | Why forecasts alone are not decision value |
+| [Decision Engine](docs/DECISION_ENGINE.md) | How a legal, context-aware Exact Call is formed |
+| [Prediction & Decision Signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) | Player evidence, discovery heuristic, strategy context, human signals and bias research |
 | [Function Map](docs/FUNCTION_MAP.md) | Major private-runtime modules and their responsibilities |
 | [Calibration and Outcomes](docs/CALIBRATION_AND_OUTCOMES.md) | Human–AI research design, sample limits and future evaluation |
 | [Demo Walkthrough](docs/DEMO.md) | The intended end-to-end user journey |
