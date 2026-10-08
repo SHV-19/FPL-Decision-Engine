@@ -87,7 +87,7 @@ Read [Calibration and Outcomes](docs/CALIBRATION_AND_OUTCOMES.md) for research l
 | Deep Dive plus deterministic Exact Call validation | Verified implementation |
 | Research event capture and GW archives | Verified in private audit |
 | Five-GW normalized decision/outcome analysis and adaptive learning | **Planned V5 work — not claimed complete** |
-| Public repository | Documentation and security-policy showcase; curated implementation source is not yet present in this GitHub repository |
+| Public repository | Audited 17-file curated source showcase published in `src/` and `scripts/`; full private runtime and account data intentionally excluded |
 
 The **verified project checkpoint is V4.1.2 (2026/27, post-GW5)**. Do not confuse this historical implementation checkpoint with a completed V5 release.
 
@@ -95,7 +95,7 @@ The **verified project checkpoint is V4.1.2 (2026/27, post-GW5)**. Do not confus
 
 **PowerShell** · **HTML / JavaScript** · **Official Fantasy Premier League APIs** · **LiveFPL enrichment** · **AI reasoning API** · **JSON / JSONL research storage** · **GitHub Actions**
 
-The private local system is not represented here as a plug-and-play hosted service. A published, synthetic-data demo is not yet available.
+The curated implementation is available in [`src/automation`](src/automation), [`src/ui`](src/ui) and [`scripts`](scripts). This is not a plug-and-play hosted service; a published synthetic-data demo is not yet available.
 
 ## Explore the project
 
