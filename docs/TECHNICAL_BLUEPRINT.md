@@ -6,6 +6,14 @@ The inspected checkpoint is a local-first Windows application primarily orchestr
 
 Do not assume Python-based forecasting, a hosted backend, training pipeline or production cloud deployment simply because the public presentation uses terms such as analytics and AI.
 
+## Signal construction
+
+The deep-decision context is assembled from real implementation fields rather than a single opaque score. Official FPL contributes player availability, price, form, EP, points, minutes/starts, attacking and defensive returns, bonus/BPS, xG/xA/xGI/xGC, per-90 derivatives, influence/creativity/threat/ICT, ownership, transfer movement and upcoming fixtures.
+
+A small deterministic `discovery_score` (`2×ep_next + 0.8×form + 1.3×xGI/90`) is used only to shortlist alternatives. Final recommendations are produced from the richer context and remain subject to deterministic legality checks.
+
+See [Prediction and Decision Signals](PREDICTION_AND_DECISION_SIGNALS.md) for the complete signal taxonomy and human–AI research layer.
+
 ## Core modules and lifecycle
 
 | Layer | Responsibility |
