@@ -16,6 +16,8 @@
 
 **Decision Engine** is the whole local-first FPL decision-support product. **Control Center** is the browser UI and Windows-local operational app. **Decision Studio** is its AI-assisted recommendation workflow. **FPL Decision Engine Studio**, a separate private ChatGPT plugin, only helps maintain documentation, evidence and handoffs; it does **not** operate the Windows services or private FPL account. A separate Python V5 event console has an auxiliary monitoring role.
 
+![Public-safe FPL architecture diagram](architecture-public-safe.svg)
+
 ## The one-sentence model
 
 **Official data establishes state. Football and competitive evidence informs options. AI proposes. Deterministic code validates. The human makes any real Official FPL changes.**
