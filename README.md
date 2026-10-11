@@ -1,139 +1,84 @@
 <div align="center">
 
 # FPL Decision Engine
+### Explainable football analytics for decisions, not just player rankings.
 
-### From football data to decisions you can explain.
+**Fantasy Premier League · Sports analytics · Human–AI decision making · Constraint validation**
 
-**Fantasy Premier League · Sports Analytics · Decision Intelligence · Human–AI Research**
+> **The harder question:** A player may look like the best pick — but is signing them the best move for *this* squad, budget, gameweek and risk profile?
 
-A local-first decision-support system that combines **authoritative FPL squad state**, live matchday signals, competitive context, AI-assisted reasoning, and **deterministic legality checks**—then records evidence and outcomes for retrospective analysis.
+A local-first FPL decision-support project that combines **Official FPL data, squad and transfer rules, football evidence, LiveFPL context, and AI-assisted reasoning**. The model proposes; deterministic code checks whether the proposed squad action is legal; the manager remains in control.
 
-[Presentation & research kit](docs/portfolio/README.md) · [Architecture](docs/ARCHITECTURE.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Decision method](docs/DECISION_ENGINE.md) · [Prediction & signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Technical blueprint](docs/TECHNICAL_BLUEPRINT.md) · [Demo walkthrough](docs/DEMO.md)
+[**See a 2-minute worked example**](docs/portfolio/SYNTHETIC_DECISION_EXAMPLE.md) · [**Architecture diagram**](docs/portfolio/ARCHITECTURE_MAP.md) · [**Explore the public source**](src/automation) · [**Research & collaboration**](docs/portfolio/COLLABORATE.md)
 
 </div>
 
 ---
 
-## The question
+## Why this matters
 
-> Most FPL tools ask: **Who is predicted to score the most points?**
->
-> This project asks: **Given the actual squad, free transfers, bank, fixtures, league position, rivals, risk and uncertainty—what decision should the manager make?**
+Many FPL tools rank players. **A decision engine must compare feasible actions.** It needs to know which players are already owned, the transfer budget and free transfers, the cost of a points hit, legal lineups, future flexibility and the uncertainties in the evidence.
 
-Raw projections are inputs. A useful recommendation also has to respect ownership, the price of making a move, feasible starting XIs, time horizons and what the model actually knows.
+| Prediction | Decision | Strategy |
+|---|---|---|
+| Who looks promising on minutes, xGI, form and fixtures? | Is HOLD, a free transfer or a hit worthwhile *for this team*? | How should rank, effective ownership (EO), rivals and uncertainty influence the choice? |
 
-### What makes this different
+**Example — synthetic, not a recorded matchday result:** Suppose a transfer recommendation would create **four players from one club**. It can look appealing on form and expected points, but the deterministic legality gate must reject it. The project also distinguishes a rejected/expired authenticated squad from a fresh current team; stale ownership cannot authorize an actionable Exact Call.
 
-The engine deliberately separates **prediction, discovery, decision value and research**.
+[Read the complete synthetic walkthrough →](docs/portfolio/SYNTHETIC_DECISION_EXAMPLE.md)
 
-- **Prediction evidence:** Official FPL form/EP, xG/xA/xGI, per-90 rates, minutes, availability, price, ICT-style signals and six-fixture runs.
-- **Candidate discovery:** a transparent shortlist heuristic narrows alternatives; it is explicitly **not** called projected points.
-- **Decision value:** the comparison adds the actual 15-player squad, bank, free transfers, selling prices, hit cost, future flexibility, rank/EO/rival context and uncertainty.
-- **Human evidence:** eye test, tactics, hunches, external opinions and screenshots are retained with provenance rather than being silently converted into facts.
-- **Bias research:** the system records pre-model belief, confidence, model advice, whether the manager changed their mind, the final Official action and the outcome so confirmation, recency, ownership pressure, loss aversion, AI deference and hindsight effects can be studied rather than hidden.
+## The system at a glance
 
-See [Prediction and Decision Signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) for the exact signal stack and research design.
+![Public-safe data and decision architecture](docs/portfolio/architecture-public-safe.svg)
 
-### What the system supports
+1. **Establish authority.** Official FPL supplies player/fixture identities and scoring; the authenticated editable squad is required for current team advice. Public health is not proof of private account health.
+2. **Enrich, with provenance.** LiveFPL contributes projected-rank/EO context. Human eye-test notes, opinions and screenshots stay attributed; none can overwrite Official squad state.
+3. **Compare actions.** The decision layer considers transfer economics, lineups, captaincy, risk, near-term fixtures and future flexibility. A shortlist heuristic is **not** presented as predicted points.
+4. **Validate rules.** Explicit checks cover owned players, budget, position, three-per-club, a unique 15-player squad, legal XI/bench and captain/vice constraints.
+5. **Keep humans accountable.** Recommendations are advisory. Any real FPL transfer or chip action is performed manually on the Official FPL site.
+6. **Capture research evidence.** The design records beliefs, model recommendations, user responses and gameweek records for later evaluation; full normalized outcome and causal research remain unfinished.
 
-| Decision | Factors considered |
+[Decision mechanics](docs/DECISION_ENGINE.md) · [Signal construction](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Source and function map](docs/FUNCTION_MAP.md)
+
+## Choose the path that fits your work
+
+| If you are… | Start here | What to evaluate |
+|---|---|---|
+| **Sports analyst / football-data engineer** | [Architecture & source contracts](docs/portfolio/ARCHITECTURE_MAP.md) | Football data provenance, source freshness, constraint-aware choices |
+| **Researcher / PhD supervisor** | [Research design](docs/portfolio/RESEARCH_BRIEF.md) | Human–AI influence, calibration, bias hypotheses and missing baselines |
+| **Product / BI hiring manager** | [Five-minute product story](docs/portfolio/PRESENTATION_STORY.md) | Problem framing, user workflow, trade-offs and honest verification |
+| **Software engineer** | [Curated source](src/automation) and [technical blueprint](docs/TECHNICAL_BLUEPRINT.md) | PowerShell orchestration, rule checks, local UI and failure handling |
+| **FPL user** | [Feature and demo walkthrough](docs/portfolio/OPERATOR_WALKTHROUGH.md) | Transfer/HOLD advice, XI/bench, live scores, league and decision research |
+
+**Interested in collaboration?** [Read the specific research and engineering questions](docs/portfolio/COLLABORATE.md) or [open a public project inquiry](https://github.com/SHV-19/FPL-Decision-Engine/issues/new/choose). Do not share personal FPL credentials or private account data in issues.
+
+## What is demonstrable — and what is not
+
+| Evidence / scope | Current claim |
 |---|---|
-| **Transfer or hold** | Owned players, bank, free transfers, hit cost, fixtures, future flexibility |
-| **Captain / vice** | Scoring upside, reliability, projected minutes, ownership/rank context |
-| **Starting XI and bench** | Formation legality, expected opportunities, goalkeeper/bench rules |
-| **Chips and future planning** | Horizon, squad composition, opportunity cost |
-| **Live matchday** | Official locked picks and event-live points, enriched with rank/EO context |
-| **Rivals and leagues** | Rank movement and competitive environment, with source and sampling caveats |
-| **Decision review** | Evidence, user statements, model recommendations, actions and GW outcomes where reconstructable |
+| Curated public code | **Available:** historical V4.1.2 checkpoint with PowerShell automation, Control Center UI and source-safety checks |
+| Decision rules and data contracts | **Inspected in source:** structured proposals and deterministic legality logic |
+| Historical local operation | **Recorded:** one runtime-v2 audit had 42 passed, 6 warnings and 16 not tested out of 64; a separate classic-league audit observed 21/21 configured leagues refreshed |
+| Latest private editable-team authentication | **Open:** last explicit reconnect attempt reported a rejected/expired credential; a fresh authenticated squad has not been reverified |
+| Full V5 private runtime / always-on deployment | **Not released publicly:** not represented by this curated repository |
+| Prediction superiority / rank improvement / bias causal findings | **Not established:** these are evaluation questions, not validated outcomes |
 
-## How it works
+The public repository is **not a ready-to-run hosted service**, and no independent synthetic application demo is published yet. The private Windows build, local caches, account data and research archives are deliberately excluded. [See the release-evidence gates](docs/RELEASE_READINESS.md) and [dated V5 engineering notes](docs/V5_ENGINEERING_PROGRESS_OCT2026.md).
 
-```mermaid
-flowchart TD
-  O[Official FPL public data] --> C[Canonical player, fixture and match context]
-  A[Authenticated Official current team] --> T[Validated 15-player snapshot]
-  L[LiveFPL rank and EO signals] --> K[Scoped decision context]
-  H[Human beliefs and external evidence] --> K
-  C --> K
-  T --> K
-  K --> D[AI Deep Dive]
-  D --> P[Structured proposal]
-  P --> V{Deterministic rules}
-  V -->|Valid| X[Exact Call]
-  V -->|Invalid| R[One repair or block]
-  X --> F[Human action in Official FPL]
-  F --> E[Research events and GW review]
-```
+## What is actually implemented?
 
-**AI proposes. Code validates. The manager decides.** The model never substitutes for Official FPL's account state or lineup rules.
+The historically reviewed private product has a Windows-local **Control Center** (Home, Team, Live, Leagues, Decision Studio, Research and Advanced). The **Decision Engine** names the whole product; **Decision Studio** is the AI-assisted workflow within it. **FPL Decision Engine Studio** is a *separate private ChatGPT documentation plugin* and does not control the local app. The auxiliary Python V5 event console is an independent monitoring surface, not private squad authority.
 
-## The engineering decisions that matter
+**Technology:** PowerShell, HTML/JavaScript, Official Fantasy Premier League APIs, LiveFPL context, AI reasoning API, JSON/JSONL research records, and an auxiliary Python event monitor in later private work.
 
-**1. State before advice.** An actionable Exact Call requires a fresh authenticated **current** team—not the last locked squad, a cached copy or a screenshot. Failure to refresh blocks the actionable recommendation.
+This project was built using **AI-assisted development**, with human-led problem definition, source authority rules, data/analytics requirements, system behavior, iterative debugging, QA criteria and release decisions. The presence of AI-generated code does not imply a proprietary trained FPL forecasting model. [How the project was built](docs/portfolio/BUILD_STORY_AND_QA.md).
 
-**2. Structured proposals, not invented lineups.** Deterministic validation enforces 15 unique players, legal transfers and position/club limits, budget checks when supported, 11 starters, legal formation, four-person bench, and a captain/vice pair drawn from starters.
+## Explore in depth
 
-**3. Live points have one official source.** Matchday scoring is based on locked picks × Official FPL event-live player points, less Official transfer cost. LiveFPL enriches projected rank and effective ownership (EO); it does not replace official points.
+[Portfolio hub](docs/portfolio/README.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Architecture](docs/ARCHITECTURE.md) · [Prediction and decision signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Calibration and outcomes](docs/CALIBRATION_AND_OUTCOMES.md) · [Demo walk-through](docs/DEMO.md) · [Privacy and publication scope](docs/PRIVACY_AND_PUBLIC_SOURCE.md) · [Release readiness](docs/RELEASE_READINESS.md)
 
-**4. Small questions should stay small.** A focused captain/bench question gets proportional analysis. Full gameweek planning uses deeper reasoning. Mentioning a league as evidence provenance should not launch unrelated rival research.
+### Use and citation
 
-**5. Evidence is not ownership.** Screenshots, football observations, news, opinions and hunches retain provenance. Another person's claim is not automatically the user's belief—and neither can rewrite the current squad.
+This repository is a **curated public showcase**, not an open-source licensed turnkey product. No license has been selected for broader reuse. For academic attribution use the repository's [citation metadata](CITATION.cff); a DOI, peer-reviewed paper or empirically validated causal study is **not** claimed.
 
-## Built as a living decision laboratory
-
-The longer-term research question is whether football understanding, statistics, intuition, AI influence and competitive context improve **ex-ante decision quality**, not merely whether a lucky pick scored points.
-
-`evidence → belief → recommendation → human response → Official action → outcome → evaluation`
-
-The post-GW5 checkpoint includes five closed gameweeks and approximately **709 research events**. However, its legacy decision ledger contains only two entries, and portions of the historical evidence require reconstruction. Those numbers demonstrate **capture and coverage**, not proved predictive superiority, automated model retraining, or causal AI impact.
-
-Read [Calibration and Outcomes](docs/CALIBRATION_AND_OUTCOMES.md) for research limitations and the planned post-GW5 evaluation.
-
-## Current implementation and release status
-
-| Area | Status |
-|---|---|
-| Local PowerShell orchestration and browser Control Center | Verified in private V4.1.2 audit |
-| Official FPL and authenticated editable current-team integration | Verified implementation; operational authentication requires private local configuration |
-| LiveFPL enrichment and Official event-live matchday logic | Verified implementation |
-| Deep Dive plus deterministic Exact Call validation | Verified implementation |
-| Research event capture and GW archives | Verified in private audit |
-| Five-GW normalized decision/outcome analysis and adaptive learning | **Planned V5 work — not claimed complete** |
-| Public repository | Audited 17-file curated source showcase published in `src/` and `scripts/`; full private runtime and account data intentionally excluded |
-
-The **verified project checkpoint is V4.1.2 (2026/27, post-GW5)**. Do not confuse this historical implementation checkpoint with a completed V5 release.
-
-**October 2026 documentation update:** A private consolidated technical dossier and acceptance tracker have been prepared. The later private core-only work is summarized in [V5 Engineering Progress](docs/V5_ENGINEERING_PROGRESS_OCT2026.md); fresh authenticated editable-team verification and full release certification remain open. The public source showcase is still the curated historical V4.1.2 subset.
-
-### Stack
-
-**PowerShell** · **HTML / JavaScript** · **Official Fantasy Premier League APIs** · **LiveFPL enrichment** · **AI reasoning API** · **JSON / JSONL research storage** · **GitHub Actions**
-
-The curated implementation is available in [`src/automation`](src/automation), [`src/ui`](src/ui) and [`scripts`](scripts). This is not a plug-and-play hosted service; a published synthetic-data demo is not yet available.
-
-## Explore the project
-
-| Document | What you'll learn |
-|---|---|
-| [Product Case Study](docs/PRODUCT_CASE_STUDY.md) | Problem definition, real failure modes, tradeoffs and iteration |
-| [Architecture](docs/ARCHITECTURE.md) | Data authority, decision flow and source contracts |
-| [Technical Blueprint](docs/TECHNICAL_BLUEPRINT.md) | Runtime, components, storage and system boundaries |
-| [Decision Engine](docs/DECISION_ENGINE.md) | How a legal, context-aware Exact Call is formed |
-| [Prediction & Decision Signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) | Player evidence, discovery heuristic, strategy context, human signals and bias research |
-| [Function Map](docs/FUNCTION_MAP.md) | Major private-runtime modules and their responsibilities |
-| [Calibration and Outcomes](docs/CALIBRATION_AND_OUTCOMES.md) | Human–AI research design, sample limits and future evaluation |
-| [Demo Walkthrough](docs/DEMO.md) | The intended end-to-end user journey |
-| [Privacy and Public Source](docs/PRIVACY_AND_PUBLIC_SOURCE.md) | What is excluded from publication and why |
-| [Building With AI](docs/BUILDING_WITH_AI.md) | Transparent development approach and division of responsibility |
-| [V5 Engineering Progress](docs/V5_ENGINEERING_PROGRESS_OCT2026.md) | Dated, public-safe update on later private engineering; not a V5 source release |
-| [Release Readiness](docs/RELEASE_READINESS.md) | Evidence requirements, operational limitations and remaining release gates |
-
-## Development and ownership
-
-Built through **AI-assisted development**, with human-led problem definition, analytics requirements, product/workflow design, validation contracts, source verification, debugging, methodology and release decisions. AI-assisted development is distinct from the AI analysis offered *inside* the product.
-
-This is a decision-intelligence and product-analytics project, not a claim that every source line was typed manually or that every proposed research feature has shipped.
-
----
-
-<sub>Fantasy Premier League and associated product names belong to their respective owners. This is an independent project, not an official Premier League product. No account tokens, personal squad data, private rival histories or raw research archives belong in this public showcase.</sub>
+<sub>Independent Fantasy Premier League research project; not affiliated with or endorsed by the Premier League. Do not post account credentials, private manager identities, raw logs or screenshots in public issues.</sub>
