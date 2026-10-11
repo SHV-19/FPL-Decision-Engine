@@ -103,6 +103,8 @@ Read [Calibration and Outcomes](docs/CALIBRATION_AND_OUTCOMES.md) for research l
 
 The **verified project checkpoint is V4.1.2 (2026/27, post-GW5)**. Do not confuse this historical implementation checkpoint with a completed V5 release.
 
+**October 2026 documentation update:** A private consolidated technical dossier and acceptance tracker have been prepared. The later private core-only work is summarized in [V5 Engineering Progress](docs/V5_ENGINEERING_PROGRESS_OCT2026.md); fresh authenticated editable-team verification and full release certification remain open. The public source showcase is still the curated historical V4.1.2 subset.
+
 ### Stack
 
 **PowerShell** · **HTML / JavaScript** · **Official Fantasy Premier League APIs** · **LiveFPL enrichment** · **AI reasoning API** · **JSON / JSONL research storage** · **GitHub Actions**
@@ -123,6 +125,8 @@ The curated implementation is available in [`src/automation`](src/automation), [
 | [Demo Walkthrough](docs/DEMO.md) | The intended end-to-end user journey |
 | [Privacy and Public Source](docs/PRIVACY_AND_PUBLIC_SOURCE.md) | What is excluded from publication and why |
 | [Building With AI](docs/BUILDING_WITH_AI.md) | Transparent development approach and division of responsibility |
+| [V5 Engineering Progress](docs/V5_ENGINEERING_PROGRESS_OCT2026.md) | Dated, public-safe update on later private engineering; not a V5 source release |
+| [Release Readiness](docs/RELEASE_READINESS.md) | Evidence requirements, operational limitations and remaining release gates |
 
 ## Development and ownership
 
