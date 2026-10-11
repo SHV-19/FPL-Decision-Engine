@@ -2,6 +2,12 @@
 
 **For sports analytics, product/BI, engineering and research audiences.** Public-safe companion to the curated V4.1.2 source showcase, updated October 2026. These pages describe historical implementation and research direction, **not a live operational certification**.
 
+## A quick way in
+
+**[Try a two-minute synthetic decision example](SYNTHETIC_DECISION_EXAMPLE.md)** showing why a tempting transfer can fail budget and club-limit checks. It is an illustration of the documented decision contract, **not** an executed acceptance test.
+
+**[Research or collaboration?](COLLABORATE.md)** Bring a specific sports-data, experimental-design or engineering question, and use the public issue template without posting credentials or private participant information.
+
 ## Start by audience
 
 | Audience | Read | What it explains |
@@ -30,4 +36,4 @@ These public pages contain **no** credentials, current personal account data, ra
 
 For independently viewable underlying sources see [README](../../README.md), [Architecture](../ARCHITECTURE.md), [Decision Engine](../DECISION_ENGINE.md), [Release readiness](../RELEASE_READINESS.md) and [Calibration](../CALIBRATION_AND_OUTCOMES.md).
 
-**Presentation-ready PDF and PPTX exports have been prepared separately.** They will be added to GitHub only through a reviewed binary-upload process; this Markdown set is the fully reviewable public counterpart.
+**Presentation-ready PDF and PPTX exports were prepared separately** as a private user-delivery package. This public repository currently offers reviewable Markdown, code and an architecture diagram; do not assume downloadable slide binaries are hosted here.
