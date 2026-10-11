@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-label="FPL Decision Engine data authority and decision validation architecture">
+<rect width="1440" height="860" fill="#0f1e31"/>
+<text x="80" y="84" fill="#f2f7fb" font-family="Arial,sans-serif" font-size="43" font-weight="bold">FPL Decision Engine</text>
+<text x="80" y="127" fill="#9fbbce" font-family="Arial,sans-serif" font-size="24">Authoritative data → scoped context → structured proposal → deterministic rules → human decision</text>
+<g font-family="Arial,sans-serif" font-size="22">
+<rect x="80" y="205" width="352" height="125" rx="14" fill="#203851" stroke="#25bda8" stroke-width="3"/>
+<text x="108" y="248" fill="#f7ffff" font-weight="bold">Official FPL</text><text x="108" y="281" font-size="18" fill="#c0d2de">Public: players, fixtures, points</text><text x="108" y="305" font-size="18" fill="#c0d2de">Private: editable 15-player team</text>
+<rect x="80" y="359" width="352" height="113" rx="14" fill="#203851" stroke="#e2a05b" stroke-width="3"/>
+<text x="108" y="402" fill="#f7ffff" font-weight="bold">LiveFPL</text><text x="108" y="431" font-size="18" fill="#c0d2de">Rank / EO context; not scoring authority</text>
+<rect x="80" y="501" width="352" height="113" rx="14" fill="#203851" stroke="#a5bdde" stroke-width="3"/>
+<text x="108" y="545" fill="#f7ffff" font-weight="bold">Human evidence</text><text x="108" y="576" font-size="18" fill="#c0d2de">Attributed hunches, screenshots, beliefs</text>
+<rect x="533" y="322" width="353" height="172" rx="18" fill="#173d49" stroke="#25bda8" stroke-width="4"/>
+<text x="569" y="371" fill="#ffffff" font-weight="bold">Canonical context</text><text x="569" y="408" font-size="19" fill="#ccece7">Source / time / squad authority</text><text x="569" y="439" font-size="19" fill="#ccece7">Fixtures / economics / uncertainty</text><text x="569" y="470" font-size="18" fill="#9ee0d1">Fail closed on stale private state</text>
+<rect x="987" y="205" width="366" height="135" rx="14" fill="#203851" stroke="#8fc8e7" stroke-width="3"/>
+<text x="1021" y="251" fill="#ffffff" font-weight="bold">AI structured proposal</text><text x="1021" y="284" font-size="18" fill="#c0d2de">HOLD / transfer / lineup routes</text><text x="1021" y="313" font-size="18" fill="#c0d2de">Analysis is not authorization</text>
+<rect x="987" y="381" width="366" height="134" rx="14" fill="#203851" stroke="#e2a05b" stroke-width="3"/>
+<text x="1021" y="427" fill="#ffffff" font-weight="bold">Deterministic legality</text><text x="1021" y="458" font-size="18" fill="#c0d2de">15 / 11 / formation / bank / clubs</text><text x="1021" y="487" font-size="18" fill="#c0d2de">Pass / one repair / block</text>
+<rect x="987" y="559" width="366" height="107" rx="14" fill="#146157" stroke="#51d9c3" stroke-width="3"/>
+<text x="1021" y="606" fill="#ffffff" font-weight="bold">Human decides</text><text x="1021" y="637" font-size="18" fill="#d2f4ed">Any FPL action happens separately</text>
+<path d="M432 267 H485 V372 H533" stroke="#25bda8" fill="none" stroke-width="4"/>
+<path d="M432 415 H533" stroke="#e2a05b" fill="none" stroke-width="4"/>
+<path d="M432 557 H485 V446 H533" stroke="#a5bdde" fill="none" stroke-width="4"/>
+<path d="M886 402 H938 V272 H987" stroke="#8fc8e7" fill="none" stroke-width="4"/>
+<path d="M1170 340 V381" stroke="#e2a05b" fill="none" stroke-width="4"/>
+<path d="M1170 515 V559" stroke="#51d9c3" fill="none" stroke-width="4"/>
+<text x="80" y="771" fill="#9fbbce" font-size="19">Control Center = Windows-local product UI · Decision Studio = AI feature · Engine Studio plugin = separate documentation assistant</text>
+<text x="80" y="816" fill="#9fbbce" font-size="17">Schematic of historically inspected components; not proof of current live authentication or a completed private V5 release.</text>
+</g>
+</svg>
