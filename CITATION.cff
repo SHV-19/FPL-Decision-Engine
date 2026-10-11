@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you refer to the FPL Decision Engine curated research and software showcase, please cite this repository. It is not a peer-reviewed study."
+title: "FPL Decision Engine: Explainable Fantasy Premier League Decision Support"
+authors:
+  - name: "SHV-19"
+type: software
+repository-code: "https://github.com/SHV-19/FPL-Decision-Engine"
+url: "https://github.com/SHV-19/FPL-Decision-Engine"
+abstract: "A curated historical source showcase and research design for constraint-aware Fantasy Premier League decisions combining official data authority, contextual enrichment, AI-assisted proposals and deterministic lineup validation. The full private runtime and human-AI outcome study are not publicly certified."
+keywords:
+  - "fantasy premier league"
+  - "sports analytics"
+  - "football analytics"
+  - "decision support"
+  - "human-ai interaction"
