@@ -8,7 +8,7 @@
 
 A local-first decision-support system that combines **authoritative FPL squad state**, live matchday signals, competitive context, AI-assisted reasoning, and **deterministic legality checks**—then records evidence and outcomes for retrospective analysis.
 
-[Architecture](docs/ARCHITECTURE.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Decision method](docs/DECISION_ENGINE.md) · [Prediction & signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Technical blueprint](docs/TECHNICAL_BLUEPRINT.md) · [Demo walkthrough](docs/DEMO.md)
+[Presentation & research kit](docs/portfolio/README.md) · [Architecture](docs/ARCHITECTURE.md) · [Product case study](docs/PRODUCT_CASE_STUDY.md) · [Decision method](docs/DECISION_ENGINE.md) · [Prediction & signals](docs/PREDICTION_AND_DECISION_SIGNALS.md) · [Technical blueprint](docs/TECHNICAL_BLUEPRINT.md) · [Demo walkthrough](docs/DEMO.md)
 
 </div>
 
