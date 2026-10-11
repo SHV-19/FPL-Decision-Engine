@@ -24,9 +24,13 @@ The private system is local-first and combines PowerShell data orchestration, br
 - Permanent authenticated FPL access; a later private recovery attempt reported a rejected/expired saved refresh credential and required reconnecting locally.
 - That the public GitHub source represents the complete or latest private runtime.
 
-## Planned documentation deliverables
+## Documentation and next-phase checkpoint (11 October 2026)
 
-Architecture and data-flow diagrams, system mechanics and decision rules, technical implementation notes, feature/user guide, security and privacy review, verified testing register, product/portfolio case study and public launch communications.
+A **private consolidated documentation package** has been drafted, including the product-owner report, technical architecture, mechanics and provenance, security/privacy review, operator guide, acceptance-testing handoff, release roadmap and evidence register. A 20-case acceptance tracker and separate career-material drafts were also prepared. These private files are deliberately **not** mirrored into the public repository.
+
+Documentation readiness does **not** establish full runtime acceptance. The locally installed core-only application remains pending fresh authenticated current-team verification and other release-gate evidence. A Windows Downloads consolidation organizer has been prepared separately but was not remotely executed; reorganizing personal files is not part of this GitHub source release.
+
+For the review standard and remaining gates, see [Release Readiness](RELEASE_READINESS.md). GitHub publication of this update remains subject to pull-request review.
 
 See the existing [Architecture](ARCHITECTURE.md), [Decision Engine](DECISION_ENGINE.md), and [Privacy and Public Source](PRIVACY_AND_PUBLIC_SOURCE.md) documents for the curated historical implementation.
 
