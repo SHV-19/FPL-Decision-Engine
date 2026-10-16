@@ -1,0 +1,24 @@
+name: Proposal gate regressions
+
+on:
+  pull_request:
+    paths:
+      - 'src/automation/Run-CopilotAI.ps1'
+      - 'scripts/test_proposal_gate.ps1'
+      - '.github/workflows/proposal-gate-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proposal-gate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate proposal gate on Windows PowerShell 5.1
+        shell: powershell
+        run: ./scripts/test_proposal_gate.ps1
+      - name: Validate proposal gate on PowerShell 7
+        shell: pwsh
+        run: ./scripts/test_proposal_gate.ps1
