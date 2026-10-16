@@ -232,8 +232,9 @@ function Validate-DeepTeamProposal($Proposal,$CurrentSquad,$BankM=$null) {
             if(-not [string]::IsNullOrWhiteSpace($key)){
                 $sellPrice=$null
                 try{if($pl.selling_price_m -ne $null){$sellPrice=[double]$pl.selling_price_m}}catch{}
-                if($sellPrice -eq $null){try{if($pl.current_price_m -ne $null){$sellPrice=[double]$pl.current_price_m}}catch{}}
-                if($sellPrice -eq $null){try{if($pl.price_m -ne $null){$sellPrice=[double]$pl.price_m}}catch{}}
+                # Never substitute current market price for the account's actual
+                # selling price: FPL profit-sharing can make them different.
+                # Unknown selling price blocks an actionable transfer.
                 $expected[$key]=[pscustomobject]@{
                     name=[string]$pl.name
                     position=([string]$pl.position).ToUpperInvariant()
@@ -287,10 +288,10 @@ function Validate-DeepTeamProposal($Proposal,$CurrentSquad,$BankM=$null) {
                 $declaredClub=([string]$tr.in_club).Trim()
                 if($declaredClub -and $inClub -and (Normalize-ProposalName $declaredClub) -ne (Normalize-ProposalName $inClub)){[void]$errors.Add(('Transfer-in club contradicts Official FPL for '+[string]$tr.in+'.'))}
             }else{
-                if($officialUniverseAvailable){
-                    [void]$errors.Add(('Transfer-in player could not be uniquely matched to Official FPL: '+[string]$tr.in+'.'))
-                }
-                try{if($tr.in_price_m -ne $null){$inPrice=[double]$tr.in_price_m}}catch{}
+                # An incoming player must resolve uniquely to Official FPL even
+                # when the local bootstrap is missing. Model metadata is not authority.
+                [void]$errors.Add(('Transfer-in player could not be uniquely matched to Official FPL: '+[string]$tr.in+'.'))
+                $budgetDataComplete=$false
             }
             if($inPos -notin @('GKP','DEF','MID','FWD')){
                 [void]$errors.Add(('Transfer-in position is invalid for '+[string]$tr.in+'.'))
@@ -303,13 +304,23 @@ function Validate-DeepTeamProposal($Proposal,$CurrentSquad,$BankM=$null) {
             $expected[$expectedInKey]=[pscustomobject]@{name=if($official){[string]$official.web_name}else{[string]$tr.in};position=$inPos;club=$inClub;sell_price_m=$inPrice}
         }
 
-        if($transfers.Count -gt 0 -and $BankM -ne $null -and $budgetDataComplete){
+        if($transfers.Count -gt 0){
+            $bankVerified=$false
+            $verifiedBank=0.0
             try{
-                $available=[double]$BankM+$saleFunds
+                if($BankM -ne $null -and -not [string]::IsNullOrWhiteSpace([string]$BankM)){
+                    $verifiedBank=[double]$BankM
+                    $bankVerified=([double]::IsNaN($verifiedBank) -eq $false -and [double]::IsInfinity($verifiedBank) -eq $false -and $verifiedBank -ge 0)
+                }
+            }catch{}
+            if(-not $bankVerified){[void]$errors.Add('Bank is missing or invalid; transfer affordability cannot be verified.')}
+            if(-not $budgetDataComplete){[void]$errors.Add('Transfer selling prices or canonical incoming prices are missing; affordability cannot be verified.')}
+            if($bankVerified -and $budgetDataComplete){
+                $available=$verifiedBank+$saleFunds
                 if($incomingCost -gt ($available+0.001)){
                     [void]$errors.Add(('Transfers exceed budget: incoming cost £{0:N1}m vs £{1:N1}m available from bank + selling prices.' -f $incomingCost,$available))
                 }
-            }catch{}
+            }
         }
 
         $expectedKeys=@($expected.Keys)
@@ -1579,7 +1590,9 @@ try{
             if($teamProposalExpected){
                 # Strict structured output contains all 15 proposed players plus rationale.
                 # Keep enough headroom to avoid truncating an otherwise valid machine proposal.
-                if($maxOut -lt 1700){$maxOut=1700}
+                # The 15-player structured schema and reasoning tokens need a
+                # larger output allowance than short prose responses.
+                if($maxOut -lt 3600){$maxOut=3600}
                 try{$teamSnapshotIdBefore=[string]$context.current_team_state.snapshot_id}catch{}
                 $machineAllowed=$false;try{$machineAllowed=($context.decision_readiness.exact_call_allowed -eq $true)}catch{}
                 if(-not $machineAllowed){
@@ -1786,6 +1799,7 @@ STRUCTURED TEAM OUTPUT OVERRIDE:
             $deepProposal=$null
             $proposalParseError=$null
             $proposalWasRepaired=$false
+            $teamSnapshotChanged=$false
             if($isDeep){
                 $teamAuthorityBlocked=$false
                 $readinessBlocked=$false
@@ -1818,31 +1832,50 @@ STRUCTURED TEAM OUTPUT OVERRIDE:
                         if([string]::IsNullOrWhiteSpace($afterId) -or $afterId -ne $teamSnapshotIdBefore){
                             $proposalParseError='CURRENT TEAM CHANGED DURING ANALYSIS. The proposal was discarded; rerun Deep Dive on the new Official FPL snapshot.'
                             $deepProposal=$null
-                            $answer=Block-InvalidExactCall $explanation $proposalParseError
+                            $teamSnapshotChanged=$true
+                            $answer=Block-InvalidExactCall '' $proposalParseError
                         }
                     }
 
-                    if(-not $teamAuthorityBlocked -and -not $deepProposal){
+                    # A changed authenticated squad is not a model error and must
+                    # NEVER be solved by asking the model to repair an old team.
+                    if(-not $teamAuthorityBlocked -and -not $teamSnapshotChanged -and -not $deepProposal){
                         $repairReason=$proposalParseError
                         if([string]::IsNullOrWhiteSpace($repairReason)){$repairReason='Structured team proposal failed deterministic validation.'}
                         try{
-                            $repairSquadJson=$context.current_squad | ConvertTo-Json -Depth 8 -Compress
+                            # Give the repair model compact authoritative economics and
+                            # canonical candidates, rather than only error text and a squad.
+                            $repairSquad=@($context.current_squad | ForEach-Object {
+                                [ordered]@{id=$_.id;name=$_.name;team=$_.team;position=$_.position;selling_price_m=$_.selling_price_m}
+                            })
+                            $repairSquadJson=$repairSquad | ConvertTo-Json -Depth 6 -Compress
+                            $repairCandidates=@()
+                            foreach($pool in @($context.broad_candidate_pools)){
+                                foreach($p in @($pool.candidates | Select-Object -First 10)){
+                                    $repairCandidates += [ordered]@{id=$p.id;name=$p.name;team=$p.team;position=$p.position;price_m=$p.current_price_m}
+                                }
+                            }
+                            $repairCandidateJson=$repairCandidates | ConvertTo-Json -Depth 5 -Compress
+                            $repairBankJson=$context.account.bank_m | ConvertTo-Json -Compress
                             $repairInstructions=@"
 Repair the proposed FPL team after a deterministic validator rejected it.
 Return the schema-constrained JSON only. Preserve the football recommendation unless legality requires a change.
 Use exactly the authenticated CURRENT SQUAD below after explicit transfer-out/in moves.
 The proposal must have exactly 11 starters and 4 bench players, exactly one starting GKP, one bench GKP (order 0), three outfield bench players ordered 1,2,3, legal FPL formation, unique players, and different captain/vice who are starters.
 Never use screenshot-only ownership. Current squad names are authoritative.
+Use canonical player names, clubs, positions and CURRENT prices from the Official FPL candidate list. Do not invent a player or club.
+Calculate affordability using the bank plus SELLING PRICES of players being sold, not their current market prices. Reject over-budget transfers and any route exceeding three from one club.
+If the proposed replacements cannot be identified uniquely or fitted within constraints, prefer a legal HOLD route rather than guessing.
 Set answer_markdown to a one-sentence note saying the machine proposal was repaired.
 "@
-                            $repairInput="VALIDATION FAILURE:`n"+$repairReason+"`n`nCURRENT SQUAD:`n"+$repairSquadJson+"`n`nORIGINAL QUESTION:`n"+[string]$next.text+"`n`nPRIOR STRUCTURED OUTPUT:`n"+$answer
+                            $repairInput="VALIDATION FAILURE:`n"+$repairReason+"`n`nVERIFIED BANK (MILLIONS):`n"+$repairBankJson+"`n`nCURRENT SQUAD WITH SELLING PRICES:`n"+$repairSquadJson+"`n`nOFFICIAL FPL CANDIDATES (CANONICAL NAMES):`n"+$repairCandidateJson+"`n`nORIGINAL QUESTION:`n"+[string]$next.text+"`n`nPRIOR STRUCTURED OUTPUT:`n"+$answer
                             $repairBody=[ordered]@{
                                 model=$requestModel
                                 instructions=$repairInstructions
                                 input=$repairInput
                                 reasoning=[ordered]@{effort='low'}
                                 text=[ordered]@{verbosity='low';format=(Get-TeamDecisionStructuredFormat)}
-                                max_output_tokens=1200
+                                max_output_tokens=3600
                                 store=$false
                             }
                             $repairResp=Invoke-OpenAIResponse $headers $repairBody
@@ -1865,6 +1898,19 @@ Set answer_markdown to a one-sentence note saying the machine proposal was repai
                         }catch{
                             $proposalParseError=$repairReason+' | automatic structured repair failed: '+$_.Exception.Message
                             $answer=Block-InvalidExactCall $explanation $proposalParseError
+                        }
+                    }
+                    # Recheck after the optional paid repair call as well: the
+                    # authenticated team can change while the model is running.
+                    if($deepProposal -and -not [string]::IsNullOrWhiteSpace($teamSnapshotIdBefore)){
+                        $finalTeamSnapshot=Read-JsonSafe (Join-Path $Root '02_DATA\FPL_ACCOUNT\CURRENT\current-team-snapshot.json')
+                        $finalTeamSnapshotId=$null
+                        try{$finalTeamSnapshotId=[string]$finalTeamSnapshot.snapshot_id}catch{}
+                        if([string]::IsNullOrWhiteSpace($finalTeamSnapshotId) -or $finalTeamSnapshotId -ne $teamSnapshotIdBefore){
+                            $deepProposal=$null
+                            $proposalWasRepaired=$false
+                            $proposalParseError='CURRENT TEAM CHANGED DURING ANALYSIS. The result was discarded; rerun Deep Dive on the latest authenticated Official FPL snapshot.'
+                            $answer=Block-InvalidExactCall '' $proposalParseError
                         }
                     }
                 }else{
